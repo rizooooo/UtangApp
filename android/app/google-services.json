@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "352108866822",
+    "firebase_url": "https://expense-app-17ada.firebaseio.com",
+    "project_id": "expense-app-17ada",
+    "storage_bucket": "expense-app-17ada.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352108866822:android:4bfa375097c066e1294287",
+        "android_client_info": {
+          "package_name": "com.utangapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "352108866822-89brg2s0r3b0t63qeffp7euv06cbjsdc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.utangapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "352108866822-0aetnqd9gdqoc0mkdapur3rjirrsisd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDXhjs0r1w-n9r3Gk_IYrjSdsTbf2Eyl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "352108866822-0aetnqd9gdqoc0mkdapur3rjirrsisd0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
