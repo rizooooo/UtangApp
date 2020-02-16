@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Button, FlatList, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import {
+  Button,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  View,
+  StyleSheet,
+  Modal,
+  TextInput,
+  Picker,
+} from 'react-native';
 import Card from '../shared/card.component';
 import { GLOBAL_STYLES } from '../styles/global.styles';
 import { Routes } from '../core/enums/routes';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import firestore from '@react-native-firebase/firestore';
 import { timeAgo } from '../core/utils/date.util';
+import { Fonts } from '../core/enums/font';
+import FlatButton from '../shared/flat-button.component';
 
 const HomeScreen = ({ navigation }: any) => {
+  const [modalVisible, setModal] = useState(false);
   const [reviews, setReviews] = useState([
     {
       title: 'Marivic',
@@ -43,9 +56,41 @@ const HomeScreen = ({ navigation }: any) => {
 
     loadReviews();
   }, []);
+
   return (
     <View style={GLOBAL_STYLES.container}>
-      <Icon name="rocket" size={30} color="#900" />
+      <Icon
+        onPress={() => setModal(true)}
+        style={styles.addIcon}
+        name="plus"
+        size={30}
+        color="#900"
+      />
+      <Modal visible={modalVisible} animationType={'slide'}>
+        <View style={GLOBAL_STYLES.container}>
+          <Icon
+            onPress={() => setModal(false)}
+            style={styles.addIcon}
+            name="times"
+            size={30}
+            color="#900"
+          />
+          <Text style={{ fontSize: 30, fontFamily: Fonts.NunitoBold }}>
+            Add Expense
+          </Text>
+          <TextInput style={GLOBAL_STYLES.input} placeholder={'Title'} />
+          <TextInput style={GLOBAL_STYLES.input} placeholder={'Amount'} />
+          <TextInput style={GLOBAL_STYLES.input} placeholder={'Person'} />
+          <View style={GLOBAL_STYLES.picker}>
+            <Picker>
+              {[...Array(30).keys()].map(e => (
+                <Picker.Item label="Java" value="java" />
+              ))}
+            </Picker>
+          </View>
+          <FlatButton text={'Add'} />
+        </View>
+      </Modal>
       <FlatList
         data={reviews}
         renderItem={({ item }) => (
@@ -72,7 +117,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
-  }
+  },
+  addIcon: {
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
 });
 
 export default HomeScreen;

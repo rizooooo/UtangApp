@@ -1,20 +1,24 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Provider } from 'react-redux';
 import HomeStack from './app/routes/home.stack';
 import { Routes } from './app/core/enums/routes';
 import AboutStack from './app/routes/about.stack';
+import { store } from './app/redux/store';
 
 const Drawer = createDrawerNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName={Routes.Home}>
-        <Drawer.Screen name={Routes.Home} component={HomeStack} />
-        <Drawer.Screen name={Routes.About} component={AboutStack} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Drawer.Navigator initialRouteName={Routes.Home}>
+          <Drawer.Screen name={Routes.Home} component={HomeStack} />
+          <Drawer.Screen name={Routes.About} component={AboutStack} />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 

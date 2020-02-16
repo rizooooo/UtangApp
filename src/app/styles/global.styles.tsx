@@ -18,7 +18,7 @@ export const GLOBAL_STYLES = StyleSheet.create({
     lineHeight: 20,
   },
   input: {
-    marginVertical: 5,
+    marginVertical: 10,
     backgroundColor: '#fff',
     fontFamily: Fonts.NunitoRegular,
     borderWidth: 1,
@@ -31,4 +31,11 @@ export const GLOBAL_STYLES = StyleSheet.create({
   errorText: {
     color: 'red',
   },
+  picker: {
+    flexDirection: 'column',
+    borderRadius: 6,
+    // height: 40,
+    borderColor: '#eaeaea',
+    borderWidth: 1,
+  }
 });
