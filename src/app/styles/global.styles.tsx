@@ -10,7 +10,7 @@ export const GLOBAL_STYLES = StyleSheet.create({
   },
   titleText: {
     fontFamily: Fonts.NunitoRegular,
-    fontSize: 14,
+    fontSize: 18,
     color: '#333',
   },
   paragraph: {

@@ -2,15 +2,16 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Fonts } from '../core/enums/font';
 
-const Card = ({ children }: any) => (
+const Card = ({ children, showNumber = false }: any) => (
   <View style={styles.card}>
     <View style={styles.cardContent}>
-      <Text>LOAD</Text>
       {children}
     </View>
-    <View style={styles.numberContainer}>
-      <Text style={styles.numberText}>-₱84</Text>
-    </View>
+    {showNumber ? (
+      <View style={styles.numberContainer}>
+        <Text style={styles.numberText}>-₱84</Text>
+      </View>
+    ) : null}
   </View>
 );
 
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   numberText: {
     fontFamily: Fonts.NunitoBold,
     fontSize: 15,
-  }
+  },
 });
 
 export default Card;

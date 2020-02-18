@@ -19,7 +19,7 @@ import { timeAgo } from '../core/utils/date.util';
 import { Fonts } from '../core/enums/font';
 import FlatButton from '../shared/flat-button.component';
 
-const HomeScreen = ({ navigation }: any) => {
+const PersonsScreen = ({ navigation }: any) => {
   const [modalVisible, setModal] = useState(false);
   const [reviews, setReviews] = useState([
     {
@@ -75,17 +75,8 @@ const HomeScreen = ({ navigation }: any) => {
             size={30}
             color="#900"
           />
-          <Text style={styles.headerForm}>Add Expense</Text>
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Title'} />
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Amount'} />
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Person'} />
-          <View style={GLOBAL_STYLES.picker}>
-            <Picker style={{ height: 40 }}>
-              {[...Array(30).keys()].map((e, i) => (
-                <Picker.Item label="Java" value="java" key={i} />
-              ))}
-            </Picker>
-          </View>
+          <Text style={styles.headerForm}>Add Person</Text>
+          <TextInput style={GLOBAL_STYLES.input} placeholder={'Person Name'} />
           <FlatButton text={'Add'} />
         </View>
       </Modal>
@@ -94,11 +85,8 @@ const HomeScreen = ({ navigation }: any) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate(Routes.Detail, item)}>
-            <Card showNumber={true}>
-              <View style={styles.iconTextContainer}>
-                <Icon style={styles.icon} name="user" size={15} color="#900" />
-                <Text style={GLOBAL_STYLES.titleText}>{item.title}</Text>
-              </View>
+            <Card>
+              <Text style={GLOBAL_STYLES.titleText}>{item.title}</Text>
               <Text>{timeAgo(new Date('2020-02-14T04:15:29.000Z'))} ago</Text>
             </Card>
           </TouchableOpacity>
@@ -126,4 +114,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default PersonsScreen;
