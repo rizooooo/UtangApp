@@ -10,6 +10,7 @@ import {
   TextInput,
   Picker,
 } from 'react-native';
+import { Formik } from 'formik';
 import Card from '../shared/card.component';
 import { GLOBAL_STYLES } from '../styles/global.styles';
 import { Routes } from '../core/enums/routes';
@@ -21,41 +22,27 @@ import FlatButton from '../shared/flat-button.component';
 
 const PersonsScreen = ({ navigation }: any) => {
   const [modalVisible, setModal] = useState(false);
-  const [reviews, setReviews] = useState([
-    {
-      title: 'Marivic',
-      rating: 5,
-      body: 'lorem ipsum',
-      key: '1',
-    },
-    {
-      title: 'Gotta Catch Them All (again)',
-      rating: 4,
-      body: 'lorem ipsum',
-      key: '2',
-    },
-    {
-      title: 'Not So "Final" Fantasy',
-      rating: 3,
-      body: 'lorem ipsum',
-      key: '3',
-    },
-  ]);
+  const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    const loadReviews = async () => {
+    const loadPersons = async () => {
       let arr: any = [];
       const documentSnapshot = await firestore()
-        .collection('reviews')
+        .collection('persons')
         .get();
       documentSnapshot.forEach(doc => {
-        arr.push(doc.data());
+        arr.push({ name: doc.data().name, id: doc.id });
       });
-      console.log(arr);
+      setPersons(arr);
     };
 
-    loadReviews();
-  }, []);
+    loadPersons();
+  }, [persons]);
+
+  const addReview = async (values: any) => {
+    const addPersonRef = await firestore().collection('persons');
+    addPersonRef.add({ ...values, date: Date.now() });
+  };
 
   return (
     <View style={GLOBAL_STYLES.container}>
@@ -76,18 +63,34 @@ const PersonsScreen = ({ navigation }: any) => {
             color="#900"
           />
           <Text style={styles.headerForm}>Add Person</Text>
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Person Name'} />
-          <FlatButton text={'Add'} />
+          <Formik
+            initialValues={{ name: '' }}
+            onSubmit={(values, action) => {
+              // action.resetForm();
+              addReview(values);
+            }}>
+            {props => (
+              <View>
+                <TextInput
+                  style={GLOBAL_STYLES.input}
+                  placeholder={'Person Name'}
+                  onChangeText={props.handleChange('name')}
+                  value={props.values.name}
+                />
+                <FlatButton text={'Add'} onPress={props.handleSubmit as any} />
+              </View>
+            )}
+          </Formik>
         </View>
       </Modal>
       <FlatList
-        data={reviews}
+        data={persons}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate(Routes.Detail, item)}>
             <Card>
-              <Text style={GLOBAL_STYLES.titleText}>{item.title}</Text>
-              <Text>{timeAgo(new Date('2020-02-14T04:15:29.000Z'))} ago</Text>
+              <Text style={GLOBAL_STYLES.titleText}>{item.name}</Text>
+              <Text>{item.date} agos</Text>
             </Card>
           </TouchableOpacity>
         )}
