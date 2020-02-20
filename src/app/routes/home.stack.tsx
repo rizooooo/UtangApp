@@ -13,7 +13,9 @@ const HomeStack = () => {
       <Stack.Screen
         name={Routes.Home}
         component={HomeScreen}
-        options={{ header: () => <Header title={'Utang App'} /> }}
+        options={{
+          header: props => <Header {...props} title={'Utang App'} />,
+        }}
       />
       <Stack.Screen
         name={Routes.Detail}

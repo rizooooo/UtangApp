@@ -13,7 +13,7 @@ const PersonsStack = () => {
       <Stack.Screen
         name={Routes.Home}
         component={PersonsScreen}
-        options={{ header: () => <Header title={'Persons'} /> }}
+        options={{ header: props => <Header {...props} title={'Utang App'} /> }}
       />
       <Stack.Screen
         name={Routes.Detail}

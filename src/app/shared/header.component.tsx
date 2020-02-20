@@ -9,19 +9,21 @@ import {
 } from 'react-native';
 import { Fonts } from '../core/enums/font';
 import { Images } from '../styles/images';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Header = ({ title, navigation }: any) => {
-//   const openMenu = () => {
-//     navigation.openDrawer();
-//   };
+  const openMenu = () => {
+    navigation.toggleDrawer();
+  };
   return (
     <ImageBackground source={Images.headerImage} style={styles.header}>
-      {/* <MaterialIcons
-        name="menu"
-        size={25}
+      <Icon
+        onPress={() => openMenu()}
         style={styles.icon}
-        onPress={openMenu}
-      /> */}
+        name="hamburger"
+        size={30}
+        color="#900"
+      />
       <View style={styles.headerTitle}>
         <Image source={Images.headerLogo} style={styles.headerImage} />
         <Text style={styles.headerText}>{title}</Text>

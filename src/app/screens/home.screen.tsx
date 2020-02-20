@@ -9,6 +9,7 @@ import {
   Modal,
   TextInput,
   Picker,
+  Alert,
 } from 'react-native';
 import Card from '../shared/card.component';
 import { GLOBAL_STYLES } from '../styles/global.styles';
@@ -18,44 +19,64 @@ import firestore from '@react-native-firebase/firestore';
 import { timeAgo } from '../core/utils/date.util';
 import { Fonts } from '../core/enums/font';
 import FlatButton from '../shared/flat-button.component';
+import Dropdown from '../shared/dropdown.component';
+import Label from '../shared/label.component';
+import { Formik } from 'formik';
 
 const HomeScreen = ({ navigation }: any) => {
   const [modalVisible, setModal] = useState(false);
-  const [reviews, setReviews] = useState([
-    {
-      title: 'Marivic',
-      rating: 5,
-      body: 'lorem ipsum',
-      key: '1',
-    },
-    {
-      title: 'Gotta Catch Them All (again)',
-      rating: 4,
-      body: 'lorem ipsum',
-      key: '2',
-    },
-    {
-      title: 'Not So "Final" Fantasy',
-      rating: 3,
-      body: 'lorem ipsum',
-      key: '3',
-    },
-  ]);
-
+  const [expenses, setExpenses] = useState([]);
+  const [persons, setPersons] = useState([]);
+  const [person, setPerson] = useState(null);
   useEffect(() => {
-    const loadReviews = async () => {
+    const loadExpenses = async () => {
       let arr: any = [];
       const documentSnapshot = await firestore()
-        .collection('reviews')
+        .collection('expenses')
         .get();
       documentSnapshot.forEach(doc => {
-        arr.push(doc.data());
+        arr.push({ ...doc.data(), id: doc.id });
       });
-      console.log(arr);
+      arr = arr.sort((a: any, b: any) => {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.date) - new Date(a.date);
+      });
+      setExpenses(arr);
     };
 
-    loadReviews();
-  }, []);
+    const loadPersons = async () => {
+      let arr: any = [];
+      const documentSnapshot = await firestore()
+        .collection('persons')
+        .get();
+      documentSnapshot.forEach(doc => {
+        arr.push({ ...doc.data(), id: doc.id });
+      });
+      arr = arr.sort((a: any, b: any) => {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.date) - new Date(a.date);
+      });
+      setPersons(arr);
+    };
+
+    loadPersons();
+    loadExpenses();
+  }, [expenses]);
+
+  const addExpense = async (values: any, action: any) => {
+    try {
+      const addExpensesRef = await firestore().collection('expenses');
+      addExpensesRef.add({ ...values, date: Date.now() });
+      action.resetForm();
+      setModal(false);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR');
+      setModal(false);
+    }
+  };
 
   return (
     <View style={GLOBAL_STYLES.container}>
@@ -76,30 +97,54 @@ const HomeScreen = ({ navigation }: any) => {
             color="#900"
           />
           <Text style={styles.headerForm}>Add Expense</Text>
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Title'} />
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Amount'} />
-          <TextInput style={GLOBAL_STYLES.input} placeholder={'Person'} />
-          <View style={GLOBAL_STYLES.picker}>
-            <Picker style={{ height: 40 }}>
-              {[...Array(30).keys()].map((e, i) => (
-                <Picker.Item label="Java" value="java" key={i} />
-              ))}
-            </Picker>
-          </View>
-          <FlatButton text={'Add'} />
+          <Formik
+            initialValues={{ title: '', amount: '', person: '' }}
+            onSubmit={(values, action) => {
+              addExpense(values, action);
+              // action.resetForm();
+              // addReview(values, action);
+            }}>
+            {props => (
+              <View>
+                <Label text={'Title of Expense: '} />
+                <TextInput
+                  onChangeText={props.handleChange('title')}
+                  value={props.values.title}
+                  style={GLOBAL_STYLES.input}
+                  placeholder={'Title'}
+                />
+                <Label text={'Amount: '} />
+                <TextInput
+                  keyboardType={'phone-pad'}
+                  onChangeText={props.handleChange('amount')}
+                  value={props.values.amount}
+                  style={GLOBAL_STYLES.input}
+                  placeholder={'Amount'}
+                />
+                <Dropdown
+                  items={persons}
+                  label={'Select Person'}
+                  onValueChange={props.handleChange('person')}
+                  selectedValue={props.values.person}
+                />
+                <FlatButton text={'Add'} onPress={props.handleSubmit as any} />
+              </View>
+            )}
+          </Formik>
         </View>
       </Modal>
       <FlatList
-        data={reviews}
+        data={expenses}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate(Routes.Detail, item)}>
-            <Card showNumber={true}>
+            <Card number={item.amount}>
               <View style={styles.iconTextContainer}>
                 <Icon style={styles.icon} name="user" size={15} color="#900" />
-                <Text style={GLOBAL_STYLES.titleText}>{item.title}</Text>
+                <Text>{item.title}</Text>
               </View>
-              <Text>{timeAgo(new Date('2020-02-14T04:15:29.000Z'))} ago</Text>
+              <Text>{item.person}</Text>
+              <Text>{timeAgo(new Date(item.date))} ago</Text>
             </Card>
           </TouchableOpacity>
         )}

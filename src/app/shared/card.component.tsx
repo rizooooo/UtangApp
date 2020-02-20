@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Fonts } from '../core/enums/font';
 
-const Card = ({ children, showNumber = false }: any) => (
+const Card = ({ children, number = null }: any) => (
   <View style={styles.card}>
     <View style={styles.cardContent}>
       {children}
     </View>
-    {showNumber ? (
+    {number ? (
       <View style={styles.numberContainer}>
-        <Text style={styles.numberText}>-₱84</Text>
+        <Text style={styles.numberText}>₱{number}</Text>
       </View>
     ) : null}
   </View>

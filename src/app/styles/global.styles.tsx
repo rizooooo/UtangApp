@@ -18,7 +18,7 @@ export const GLOBAL_STYLES = StyleSheet.create({
     lineHeight: 20,
   },
   input: {
-    marginVertical: 10,
+    marginVertical: 2,
     backgroundColor: '#fff',
     fontFamily: Fonts.NunitoRegular,
     borderWidth: 1,
@@ -37,5 +37,10 @@ export const GLOBAL_STYLES = StyleSheet.create({
     // height: 40,
     borderColor: '#eaeaea',
     borderWidth: 1,
-  }
+  },
+  label: {
+    fontFamily: Fonts.NunitoSemiBold,
+    fontSize: 18,
+    marginVertical: 2,
+  },
 });

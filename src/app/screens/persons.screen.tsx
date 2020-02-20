@@ -9,6 +9,7 @@ import {
   Modal,
   TextInput,
   Picker,
+  Alert,
 } from 'react-native';
 import { Formik } from 'formik';
 import Card from '../shared/card.component';
@@ -31,7 +32,12 @@ const PersonsScreen = ({ navigation }: any) => {
         .collection('persons')
         .get();
       documentSnapshot.forEach(doc => {
-        arr.push({ name: doc.data().name, id: doc.id });
+        arr.push({ ...doc.data(), id: doc.id });
+      });
+      arr = arr.sort((a: any, b: any) => {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.date) - new Date(a.date);
       });
       setPersons(arr);
     };
@@ -39,9 +45,17 @@ const PersonsScreen = ({ navigation }: any) => {
     loadPersons();
   }, [persons]);
 
-  const addReview = async (values: any) => {
-    const addPersonRef = await firestore().collection('persons');
-    addPersonRef.add({ ...values, date: Date.now() });
+  const addReview = async (values: any, action: any) => {
+    try {
+      const addPersonRef = await firestore().collection('persons');
+      addPersonRef.add({ ...values, date: Date.now() });
+      action.resetForm();
+      setModal(false);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('ERROR');
+      setModal(false);
+    }
   };
 
   return (
@@ -67,7 +81,7 @@ const PersonsScreen = ({ navigation }: any) => {
             initialValues={{ name: '' }}
             onSubmit={(values, action) => {
               // action.resetForm();
-              addReview(values);
+              addReview(values, action);
             }}>
             {props => (
               <View>
@@ -84,13 +98,14 @@ const PersonsScreen = ({ navigation }: any) => {
         </View>
       </Modal>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={persons}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate(Routes.Detail, item)}>
             <Card>
               <Text style={GLOBAL_STYLES.titleText}>{item.name}</Text>
-              <Text>{item.date} agos</Text>
+              <Text>{timeAgo(new Date(item.date))} ago</Text>
             </Card>
           </TouchableOpacity>
         )}
