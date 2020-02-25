@@ -103,9 +103,9 @@ const PersonsScreen = ({ navigation }: any) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate(Routes.Detail, item)}>
-            <Card>
+            <Card number={12}>
               <Text style={GLOBAL_STYLES.titleText}>{item.name}</Text>
-              <Text>{timeAgo(new Date(item.date))} ago</Text>
+              <Text>Added {timeAgo(new Date(item.date))} ago</Text>
             </Card>
           </TouchableOpacity>
         )}
